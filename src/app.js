@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 
+const {
+    userRouter
+} = require('./routers');
+
 const app = express();
 const corsOptions = {
     origin: 'http://localhost:8081'
@@ -20,5 +24,7 @@ app.use('/', (req, res, next) => {
 
     next();
 });
+
+app.use('/users', userRouter);
 
 module.exports = app;
