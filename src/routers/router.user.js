@@ -11,13 +11,13 @@ router.get(
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
     wrapAsync(controllerUser.getAllUsers)
 );
-/*
+
 router.post(
     '/',
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
-    controllerUser.getAllUsers
+    controllerUser.createUser
 );
-
+/*
 router.get(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),
