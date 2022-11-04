@@ -9,9 +9,9 @@ const wrapAsync = fn => (req, res, next) => {
 router.get(
     '/',
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
-    controllerUser.getAllUsers
+    wrapAsync(controllerUser.getAllUsers)
 );
-
+/*
 router.post(
     '/',
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
@@ -35,5 +35,5 @@ router.delete(
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
     controllerUser.deleteUser
 );
-
+*/
 module.exports = router;
