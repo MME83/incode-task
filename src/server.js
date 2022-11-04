@@ -1,12 +1,15 @@
 const app = require('./app');
 const dbConnection = require('./db/dbConnection');
+const { createAdmin } = require('./db/dbCreateAdmin');
 const { 
     NODE_DOCKER_PORT, 
     MONGODB_USER, 
     MONGODB_PASSWORD, 
     MONGODB_HOST, 
     MONGODB_DOCKER_PORT, 
-    MONGODB_DATABASE  
+    MONGODB_DATABASE,
+    FADMIN_LOG,
+    FADMIN_PASS
 } = require('./common/config');
 
 const start = async () => {
@@ -18,6 +21,8 @@ const start = async () => {
 
         if (connect) {
             process.stdout.write('MongoDB connected!\n\n');
+
+            await createAdmin(FADMIN_LOG, FADMIN_PASS);
         }
 
         app.listen(NODE_PORT, () => {

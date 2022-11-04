@@ -1,4 +1,4 @@
-consnt {
+const {
     serviceUser
 } = require('../services');
 
