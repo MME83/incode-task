@@ -27,4 +27,29 @@ app.use('/', (req, res, next) => {
 
 app.use('/users', userRouter);
 
+app.use((err, req, res, next) => {
+    console.warn(`Unexpected error: ${err.message}`);
+    res.status(500).json({ error: err.message });
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error(`FATAL ERROR: Unhandled Promise Rejection ${reason.message} stack: ${reason.stack}`);
+});
+
+process.on('SIGTERM', function () {
+    console.log('Server shutting down gracefully');
+    process.exit();
+});
+
+process.on('SIGINT', function () {
+    console.log('Server down gracefully');
+    process.exit();
+});
+
+process.on('uncaughtException', function (err) {
+    let msg = `${new Date().toUTCString()} uncaughtException: ${err.message}, stack: ${err.stack}\n`;
+    console.log(msg);
+    process.exit();
+});
+
 module.exports = app;
