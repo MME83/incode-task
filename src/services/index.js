@@ -1,3 +1,3 @@
 module.exports = {
-    serviceUser: require('./service.user.js')
+    serviceUser: require('./service.user')
 };

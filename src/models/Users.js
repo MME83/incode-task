@@ -20,8 +20,7 @@ const userSchema = new Schema({
     password: {
         require: true,
         type: String,
-        minlength: 8,
-        maxlength: 30
+        minlength: 8
     },
     roles: {
         type: String,
