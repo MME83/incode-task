@@ -1,6 +1,6 @@
 const { ADMIN } = require('../common/roles');
 const { Users } = require('../models');
-const { hashPass } = require('../util');
+const { passwordUtil } = require('../util');
 
 module.exports = {
     createAdmin: async (login, password) => {
@@ -8,7 +8,7 @@ module.exports = {
 
         if (isAdminExist) return process.stdout.write('\n...admin is already exists in DB\n\n');
 
-        const hashed_pass = await hashPass(password);
+        const hashed_pass = await passwordUtil.hashPass(password);
         
         await Users.create({
             name: 'Administrator',

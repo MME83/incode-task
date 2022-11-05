@@ -1,3 +1,3 @@
 module.exports = {
-    hashPass: require('./password.hash')
+    passwordUtil: require('./password.util')
 };

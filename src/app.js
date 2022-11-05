@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 
 const {
-    userRouter
+    userRouter,
+    authRouter
 } = require('./routers');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/', (req, res, next) => {
 });
 
 app.use('/users', userRouter);
+app.use('/auth', authRouter);
 
 app.use((err, req, res, next) => {
     console.warn(`Unexpected error: ${err.message}`);

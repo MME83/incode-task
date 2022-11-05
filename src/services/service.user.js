@@ -1,15 +1,21 @@
 const { Users } = require('../models');
-const { hashPass } = require('../util');
+const { passwordUtil } = require('../util');
 const { BOSS, ADMIN } = require('../common/roles');
+const { USERMS } = require('../common/ex.keys');
+
+const createStrOfExKeys = (arrStr) => {
+    return '-' + arrStr.toString().replace(/,/g, ' -');
+};
 
 // takes a collection and a document id, returns the document fully nested with its subordinates
-const populateSubordinates = async (collection, _id, keyString) => 
-    await collection.findOne({_id})
+const populateSubordinates = async (collection, _id, keyString, strOfExKeys) => 
+    await collection.findOne({_id}, strOfExKeys)
     .then(function(obj) {
         if (obj[keyString].length < 1) return obj;
 
-        return Promise.all(obj[keyString].map(id => populateSubordinates(collection, id, keyString)))
-        .then(subordinates => Object.assign(obj, { subordinates }));
+        return Promise.all(obj[keyString].map(id => 
+            populateSubordinates(collection, id, keyString, strOfExKeys)))
+            .then(subordinates => Object.assign(obj, { subordinates }));
 });
 
 const getUsers = async () => {
@@ -30,7 +36,7 @@ const createUser = async (bodyData) => {
         }
     }
 
-    const hashedPass = await hashPass(password);
+    const hashedPass = await passwordUtil.hashPass(password);
     const user = new Users({
         email,
         name,
@@ -52,10 +58,19 @@ const createUser = async (bodyData) => {
     return savedUser;
 };
 
+const getUserByLogin = async (login) => {
+    const user = await Users.findOne({ email: login });
+
+    return user;
+};
+
 const getUserById = async (id) => {
     //const user = await Users.findOne({ _id: id }).populate('subordinates');
 
-    const user = await populateSubordinates(Users, id, 'subordinates')
+    let excludeKeys = [USERMS.pass, USERMS.ver, USERMS.created, USERMS.updated];
+    excludeKeys = createStrOfExKeys(excludeKeys);
+
+    const user = await populateSubordinates(Users, id, 'subordinates', excludeKeys);
 
     return user;
 };
@@ -64,10 +79,10 @@ const updateUser = async (id, bodyData) => {
     const user = await getUserById(id);
 
     if (!user) {
-        throw new Error(`user with id:${id} hasn't found`);
+        throw new Error(`user with id:${id} doesn't exist`);
     }
 
-    const { email, name, password, roles, boss } = bodyData;
+    const { user_id, email, password, name, roles, boss } = bodyData;
 
     if (boss) {
         const isBoss = await Users.findOne({$and: [{ _id: boss }, { roles: BOSS }]});
@@ -79,6 +94,7 @@ const updateUser = async (id, bodyData) => {
     }
 
     let updateUserData = {
+        user_id,
         email,
         password,
         name,
@@ -87,8 +103,10 @@ const updateUser = async (id, bodyData) => {
     };
 
     for (let key of Object.keys(updateUserData)) {
-        if (updateUserData[key] === '' || updateUserData[key] === null || updateUserData[key] === undefined) {
-            delete updateUserData[key];
+        if (updateUserData[key] === '' || 
+            updateUserData[key] === null || 
+            updateUserData[key] === undefined) {
+                delete updateUserData[key];
         }
     }
 
@@ -133,6 +151,7 @@ const deleteUser = async (id) => {
 module.exports = {
     getUsers,
     createUser,
+    getUserByLogin,
     getUserById,
     updateUser,
     deleteUser

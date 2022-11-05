@@ -15,25 +15,25 @@ router.get(
 router.post(
     '/',
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
-    controllerUser.createUser
+    wrapAsync(controllerUser.createUser)
 );
 
 router.get(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),
-    controllerUser.getUserById
+    wrapAsync(controllerUser.getUserById)
 );
 
 router.patch(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),
-    controllerUser.updateUser
+    wrapAsync(controllerUser.updateUser)
 );
 
 router.delete(
     '/:user_id',
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
-    controllerUser.deleteUser
+    wrapAsync(controllerUser.deleteUser)
 );
 
 module.exports = router;
