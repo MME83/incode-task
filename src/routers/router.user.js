@@ -23,7 +23,7 @@ router.get(
     //middlewareRoles.checkUserAccess(userRoles.USER),
     controllerUser.getUserById
 );
-
+*/
 router.patch(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),
@@ -35,5 +35,5 @@ router.delete(
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
     controllerUser.deleteUser
 );
-*/
+
 module.exports = router;

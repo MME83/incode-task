@@ -32,7 +32,8 @@ const userSchema = new Schema({
         default: null,
         ref: 'Users',
         trim: true
-    }
+    },
+    subordinates: []
 }, { timestamps: true });
 
 module.exports = model('Users', userSchema);

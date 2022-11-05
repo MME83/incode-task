@@ -14,15 +14,49 @@ module.exports = {
     },
     
     createUser: async (req, res) => {
-        const user = await serviceUser.createUser(req.body);
+        try {
+            const user = await serviceUser.createUser(req.body);
 
-        if (!user) {
-            return res.status(409).send({ message: 'Cant\'t create new user, try again' });
+            if (!user) {
+                return res.status(409).send({ message: 'Cant\'t create new user, try again' });
+            }
+
+            return res.status(201).send({ 
+                message: `${user.roles} has created`,
+                user
+            });
+        } catch (err) {
+            return res.status(409).send({ error: err.message });
         }
+    },
 
-        return res.status(201).send({ 
-            message: `${user.role} has created`,
-            user
-        });
+    updateUser: async (req, res) => {
+        try {
+            const { user_id } = req.params;
+            const user = await serviceUser.updateUser(user_id, req.body);
+
+            if (!user) {
+                return res.status(409).send({ message: 'Cant\'t update new user, try again' });
+            }
+
+            return res.status(201).send({ 
+                message: `user with id:${user._id} has updated`,
+                user
+            });
+        } catch (err) {
+            return res.status(409).send({ error: err.message });
+        }
+    },
+
+    deleteUser: async (req, res) => {
+        try {
+            const { user_id } = req.params;
+
+            await serviceUser.deleteUser(user_id);
+
+            return res.status(201).send({ message: `User with id: "${user_id}" has deleted` });
+        } catch(err) {
+            return res.status(409).send({ error: err.message });
+        }
     },
 };
