@@ -1,6 +1,16 @@
 const { Users } = require('../models');
 const { hashPass } = require('../util');
-const { BOSS } = require('../common/roles');
+const { BOSS, ADMIN } = require('../common/roles');
+
+// takes a collection and a document id, returns the document fully nested with its subordinates
+const populateSubordinates = async (collection, _id, keyString) => 
+    await collection.findOne({_id})
+    .then(function(obj) {
+        if (obj[keyString].length < 1) return obj;
+
+        return Promise.all(obj[keyString].map(id => populateSubordinates(collection, id, keyString)))
+        .then(subordinates => Object.assign(obj, { subordinates }));
+});
 
 const getUsers = async () => {
     const users = await Users.find();
@@ -43,7 +53,9 @@ const createUser = async (bodyData) => {
 };
 
 const getUserById = async (id) => {
-    const user = await Users.findOne({ _id: id });
+    //const user = await Users.findOne({ _id: id }).populate('subordinates');
+
+    const user = await populateSubordinates(Users, id, 'subordinates')
 
     return user;
 };
@@ -75,8 +87,8 @@ const updateUser = async (id, bodyData) => {
     };
 
     for (let key of Object.keys(updateUserData)) {
-        if (obj[key] === '' || obj[key] === null || obj[key] === undefined) {
-            delete obj[key];
+        if (updateUserData[key] === '' || updateUserData[key] === null || updateUserData[key] === undefined) {
+            delete updateUserData[key];
         }
     }
 
@@ -96,6 +108,8 @@ const updateUser = async (id, bodyData) => {
 
         process.stdout.write('\n ...user has updated \n\n');
     }
+
+    return updatedUser;
 };
 
 const deleteUser = async (id) => {
@@ -119,6 +133,7 @@ const deleteUser = async (id) => {
 module.exports = {
     getUsers,
     createUser,
+    getUserById,
     updateUser,
     deleteUser
 };

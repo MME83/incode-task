@@ -33,7 +33,7 @@ const userSchema = new Schema({
         ref: 'Users',
         trim: true
     },
-    subordinates: []
+    subordinates: [{ type: Schema.Types.ObjectId, ref: 'Users' }]
 }, { timestamps: true });
 
 module.exports = model('Users', userSchema);

@@ -17,13 +17,13 @@ router.post(
     //middlewareRoles.checkUserRole([userRoles.ADMIN, userRoles.BOSS]),
     controllerUser.createUser
 );
-/*
+
 router.get(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),
     controllerUser.getUserById
 );
-*/
+
 router.patch(
     '/:user_id',
     //middlewareRoles.checkUserAccess(userRoles.USER),

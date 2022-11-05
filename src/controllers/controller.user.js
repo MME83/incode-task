@@ -30,6 +30,18 @@ module.exports = {
         }
     },
 
+    getUserById: async (req, res) => {
+        const { user_id } = req.params;
+
+        const user = await serviceUser.getUserById(user_id);
+
+        if (!user) {
+            return res.status(409).send({ message: `User with id:${req.params.user_id} hasn't found` });
+        }
+
+        return res.status(200).json(user);
+    },
+
     updateUser: async (req, res) => {
         try {
             const { user_id } = req.params;
@@ -39,7 +51,7 @@ module.exports = {
                 return res.status(409).send({ message: 'Cant\'t update new user, try again' });
             }
 
-            return res.status(201).send({ 
+            return res.status(200).send({ 
                 message: `user with id:${user._id} has updated`,
                 user
             });
@@ -54,7 +66,7 @@ module.exports = {
 
             await serviceUser.deleteUser(user_id);
 
-            return res.status(201).send({ message: `User with id: "${user_id}" has deleted` });
+            return res.status(200).send({ message: `User with id: "${user_id}" has deleted` });
         } catch(err) {
             return res.status(409).send({ error: err.message });
         }
