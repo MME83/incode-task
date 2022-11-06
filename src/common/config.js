@@ -15,5 +15,7 @@ module.exports = {
     MONGODB_DATABASE: process.env.MONGODB_DATABASE,
     SALT: process.env.SALT,
     FADMIN_LOG: process.env.FADMIN_LOG,
-    FADMIN_PASS: process.env.FADMIN_PASS
+    FADMIN_PASS: process.env.FADMIN_PASS,
+    SECRET_ACCESS: process.env.SECRET_ACCESS,
+    SECRET_REFRESH: process.env.SECRET_REFRESH
 };

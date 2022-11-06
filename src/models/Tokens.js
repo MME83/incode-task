@@ -9,11 +9,11 @@ const tokenSchema = new Schema({
         type: String,
         required: true
     },
-    Users: {
+    users: {
         type: Schema.Types.ObjectId,
-        ref: Users,
+        ref: 'Users',
         required: true
     }
 }, { timestamps: true });
 
-module.exports = model(Tokens, tokenSchema);
+module.exports = model('Tokens', tokenSchema);

@@ -1,5 +1,5 @@
-const { serviceUser } = require('../services');
-const { passwordUtil } = require('../util')
+const { serviceUser, serviceAuth } = require('../services');
+const { passwordUtil } = require('../util');
 
 
 module.exports = {
@@ -17,6 +17,8 @@ module.exports = {
 
         req.user = user;
 
-        return res.status(200).json({ user });
+        const tokens = await serviceAuth.generateTokenPair(req.user._id);
+
+        return res.status(200).json({ user, ...tokens });
     }
 };

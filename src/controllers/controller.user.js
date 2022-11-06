@@ -45,7 +45,7 @@ module.exports = {
     updateUser: async (req, res) => {
         try {
             const { user_id } = req.params;
-            const user = await serviceUser.updateUser(user_id, req.body);
+            const user = await serviceUser.updateUser(user_id, req);
 
             if (!user) {
                 return res.status(409).send({ message: 'Cant\'t update new user, try again' });

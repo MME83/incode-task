@@ -2,6 +2,7 @@ const { Users } = require('../models');
 const { passwordUtil } = require('../util');
 const { BOSS, ADMIN } = require('../common/roles');
 const { USERMS } = require('../common/ex.keys');
+const { helper } = require('../util');
 
 const createStrOfExKeys = (arrStr) => {
     return '-' + arrStr.toString().replace(/,/g, ' -');
@@ -75,14 +76,15 @@ const getUserById = async (id) => {
     return user;
 };
 
-const updateUser = async (id, bodyData) => {
-    const user = await getUserById(id);
+const updateUser = async (id, req) => {
+    const { _id } = req.userLogged;
+    const user = await getUserById(_id);
 
     if (!user) {
         throw new Error(`user with id:${id} doesn't exist`);
     }
 
-    const { user_id, email, password, name, roles, boss } = bodyData;
+    const { user_id, email, password, name, roles, boss } = req.body;
 
     if (boss) {
         const isBoss = await Users.findOne({$and: [{ _id: boss }, { roles: BOSS }]});
@@ -110,12 +112,24 @@ const updateUser = async (id, bodyData) => {
         }
     }
 
-    const updatedUser = await Users.findByIdAndUpdate(id, updateUserData, {
+    const bossSubIds = [];
+
+    if (boss && user_id && user.roles === BOSS) {
+        bossSubIds = helper.getPropValues(user, '_id');
+
+        if (!bossSubIds.includes[user_id]) {
+            throw new Error(`Forbidden, user with id:${user_id} is not your subordinate`);
+        }
+    }
+
+    const iD = user_id || id;
+
+    const updatedUser = await Users.findByIdAndUpdate(iD, updateUserData, {
         new: true,
         runValidators: true
     });
 
-    if (updatedUser) {
+    if (updatedUser && boss && user.roles === BOSS) {
         if (updateUserData.boss) {
             await Users.updateOne({ _id: updateUserData.boss }, { $push: { subordinates: updatedUser._id } });
         }
