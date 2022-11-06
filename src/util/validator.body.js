@@ -7,7 +7,7 @@ module.exports = {
         email: Joi.string().trim().regex(RegExp.EMAIL_REGEXP).required(),
         name: Joi.string().trim().min(3).max(40).required(),
         password: Joi.string().trim().min(8).max(30).regex(RegExp.PASS_REGEXP).required(),
-        roles: Joi.string().allow(roles.BOSS, roles.USER).required
+        roles: Joi.string().allow(roles.BOSS, roles.USER).required()
     }),
 
     validateLogin: Joi.object({
@@ -24,14 +24,14 @@ module.exports = {
     }),
 
     validateUpdateUser: Joi.object({
-        email: Joi.string().trim().regex(RegExp.EMAIL_REGEXP).required(),
-        name: Joi.string().trim().min(3).max(40).required(),
-        password: Joi.string().trim().min(8).max(30).regex(RegExp.PASS_REGEXP).required(),
+        email: Joi.string().trim().regex(RegExp.EMAIL_REGEXP),
+        name: Joi.string().trim().min(3).max(40),
+        password: Joi.string().trim().min(8).max(30).regex(RegExp.PASS_REGEXP),
         roles: Joi.string().allow(roles.ADMIN, roles.BOSS, roles.USER),
         boss: Joi.string().trim().hex().length(24)
     }),
 
     validateId: Joi.object({
-        user_id: Joi.string().trim().hex().length(24).required
+        user_id: Joi.string().trim().hex().length(24).required()
     })
 };

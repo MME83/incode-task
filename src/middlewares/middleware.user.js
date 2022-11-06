@@ -49,7 +49,7 @@ module.exports = {
 
     validateUpdateUser: async (req, res, next) => {
         try {
-            await validateBody.validateUpdateUser.validateAsync(req.params);
+            await validateBody.validateUpdateUser.validateAsync(req.body);
 
             next();
         } catch(err) {
