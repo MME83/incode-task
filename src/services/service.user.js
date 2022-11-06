@@ -32,7 +32,7 @@ const createUser = async (bodyData) => {
         const isBoss = await Users.findOne({$and: [{ _id: boss }, { roles: BOSS }]});
 
         if (!isBoss) {
-            console.error(`Error: boss/manager with id:${boss} has not found or bad role`);
+            console.error(`Error: boss/manager with id:${boss} hasn't found or bad role`);
             throw new Error(`bad boss id:${boss} or key "roles"`);
         }
     }
@@ -110,9 +110,9 @@ const updateUser = async (id, req) => {
 
     if (req.userLogged.roles === BOSS && boss) {
         const { _id } = req.userLogged;
-        const currentUser = await getUserById(_id);
+        const loggedUser = await getUserById(_id);
 
-        subIds = helper.getPropValues(currentUser, '_id');
+        subIds = helper.getPropValues(loggedUser, '_id');
 
         if (!subIds.includes(id)) {
             throw new Error(`Forbidden, user with id:${id} isn't your subordinate`);
@@ -145,7 +145,7 @@ const updateUser = async (id, req) => {
             if (userForUpdate && userForUpdate.boss) {
                 await Users.updateOne(
                     { _id: userForUpdate.boss }, 
-                    { $pull: { subordinates: userForUpdate.boss } }, 
+                    { $pull: { subordinates: userForUpdate._id } }, 
                     { multi: true }
                 );
             }
