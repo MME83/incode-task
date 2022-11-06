@@ -47,6 +47,6 @@ module.exports = {
         const tokenPair = await serviceAuth.generateTokenPair();
         await serviceAuth.refreshToken(refresh_token, tokenPair);
 
-        return res.status(200).json({ user: userLogged }, ...tokenPair);
+        return res.status(200).json({ user: userLogged, ...tokenPair });
     }
 };
