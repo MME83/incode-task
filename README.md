@@ -1,4 +1,4 @@
-# Server app (express.js)
+# Build a REST API with Node.js - Express.js, Mongoose & MongoDB
 
 ### The app implements simple organization user structure management operations:
 
