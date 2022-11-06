@@ -17,5 +17,23 @@ module.exports = {
         } catch (err) {
             next(err);
         }
+    },
+
+    checkRefreshToken: async (req, res, next) => {
+        try {
+            const refreshToken = req.get('Authorization');
+
+            if (!refreshToken) {
+                return res.status(401).send({ error: 'No token' });
+            }
+
+            const tokenFromBd = await serviceAuth.verifyToken(refreshToken, 'refresh_token');
+
+            req.userLogged = tokenFromBd.users;
+            
+            next();
+        } catch (err) {
+            next(err);
+        }
     }
 };

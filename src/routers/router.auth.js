@@ -18,4 +18,16 @@ router.post(
     wrapAsync(controllerAuth.loginUser)
 );
 
+router.post(
+    '/logout',
+    middlewareAuth.checkAccessToken,
+    wrapAsync(controllerAuth.logout)
+);
+
+router.post(
+    '/refresh',
+    middlewareAuth.checkRefreshToken,
+    wrapAsync(controllerAuth.refreshToken)
+);
+
 module.exports = router;
