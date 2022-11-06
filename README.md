@@ -23,8 +23,3 @@ Each user except the Administrator has a boss (strictly one)
 - administrator can see everyone
 - boss can see himself and all subordinates (recursively)
 - regular user can see only himself
-
-
-
-
-
