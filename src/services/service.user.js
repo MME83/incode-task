@@ -126,7 +126,7 @@ const updateUser = async (id, req) => {
     let userForUpdate = null;
 
     if ([ADMIN, BOSS].includes(req.userLogged.roles)) {
-        userForUpdate = await Users.updateOne({ _id: id }, '_id roles boss');
+        userForUpdate = await Users.findOne({ _id: id }, '_id roles boss');
 
         if (!userForUpdate) {
             throw new Error(`No user with id:${id}`);

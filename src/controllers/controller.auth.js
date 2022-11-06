@@ -4,6 +4,16 @@ const { passwordUtil } = require('../util');
 
 module.exports = {
 
+    signUpUser: async (req, res) => {
+        const user = await serviceUser.createUser(req.body);
+
+        if (!user) {
+            return res.status(409).send({ message: 'Can\'t register new User, try again' });
+        }
+
+        return res.status(201).json(user);
+    },
+
     loginUser: async (req, res) => {
         const { login, password } = req.body;
 
