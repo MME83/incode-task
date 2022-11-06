@@ -77,26 +77,20 @@ const getUserById = async (id) => {
 };
 
 const updateUser = async (id, req) => {
-    const { _id } = req.userLogged;
-    const user = await getUserById(_id);
+   
+    const { email, password, name, roles, boss } = req.body;
 
-    if (!user) {
-        throw new Error(`user with id:${id} doesn't exist`);
-    }
-
-    const { user_id, email, password, name, roles, boss } = req.body;
-
+    // check if boss id exists in DB and boss has manager role
     if (boss) {
         const isBoss = await Users.findOne({$and: [{ _id: boss }, { roles: BOSS }]});
 
         if (!isBoss) {
             console.error(`Error: boss/manager with id:${boss} has not found or bad role`);
-            throw new Error(`bad boss id:${boss} or key "roles"`);
+            throw new Error(`bad boss id:${boss} or value of prop "roles"`);
         }
     }
 
     let updateUserData = {
-        user_id,
         email,
         password,
         name,
@@ -112,33 +106,52 @@ const updateUser = async (id, req) => {
         }
     }
 
-    const bossSubIds = [];
+    const subIds = [];
 
-    if (boss && user_id && user.roles === BOSS) {
-        bossSubIds = helper.getPropValues(user, '_id');
+    if (req.userLogged.roles === BOSS && boss) {
+        const { _id } = req.userLogged;
+        const currentUser = await getUserById(_id);
 
-        if (!bossSubIds.includes[user_id]) {
-            throw new Error(`Forbidden, user with id:${user_id} is not your subordinate`);
+        subIds = helper.getPropValues(currentUser, '_id');
+
+        if (!subIds.includes(id)) {
+            throw new Error(`Forbidden, user with id:${id} isn't your subordinate`);
+        }
+
+        if (!subIds.includes(updateUserData.boss)) {
+            throw new Error(`Forbidden, manager with id:${updateUserData.boss} isn't your subordinate`);
         }
     }
 
-    const iD = user_id || id;
+    let userForUpdate = null;
 
-    const updatedUser = await Users.findByIdAndUpdate(iD, updateUserData, {
+    if ([ADMIN, BOSS].includes(req.userLogged.roles)) {
+        userForUpdate = await Users.updateOne({ _id: id }, '_id roles boss');
+
+        if (!userForUpdate) {
+            throw new Error(`No user with id:${id}`);
+        }
+    }
+
+    const updatedUser = await Users.findByIdAndUpdate(id, updateUserData, {
         new: true,
         runValidators: true
     });
 
-    if (updatedUser && boss && user.roles === BOSS) {
+    if (updatedUser) {
         if (updateUserData.boss) {
             await Users.updateOne({ _id: updateUserData.boss }, { $push: { subordinates: updatedUser._id } });
+
+            if (userForUpdate && userForUpdate.boss) {
+                await Users.updateOne(
+                    { _id: userForUpdate.boss }, 
+                    { $pull: { subordinates: userForUpdate.boss } }, 
+                    { multi: true }
+                );
+            }
         }
 
-        if (user.boss) {
-            await Users.updateOne({ _id: user.boss }, { $pull: { subordinates: user._id } }, { multi: true })
-        }
-
-        process.stdout.write('\n ...user has updated \n\n');
+        process.stdout.write(`\n ...user with id:${id} has updated \n\n`);
     }
 
     return updatedUser;

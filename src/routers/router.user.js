@@ -10,14 +10,15 @@ const wrapAsync = fn => (req, res, next) => {
 router.get(
     '/',
     middlewareAuth.checkAccessToken,
-    middlewareRole.checkUserPrivileges([ADMIN]),
+    middlewareRole.checkUserRoles([ADMIN]),
     wrapAsync(controllerUser.getAllUsers)
 );
 
 router.post(
     '/',
     middlewareAuth.checkAccessToken,
-    middlewareRole.checkUserPrivileges([ADMIN, BOSS]),
+    middlewareRole.checkUserRoles([ADMIN, BOSS]),
+    middlewareRole.checkBodyProps,
     wrapAsync(controllerUser.createUser)
 );
 
@@ -31,13 +32,14 @@ router.get(
 router.patch(
     '/:user_id',
     middlewareAuth.checkAccessToken,
+    middlewareRole.checkBodyProps,
     wrapAsync(controllerUser.updateUser)
 );
 
 router.delete(
     '/:user_id',
     middlewareAuth.checkAccessToken,
-    middlewareRole.checkUserPrivileges([ADMIN]),
+    middlewareRole.checkUserRoles([ADMIN]),
     wrapAsync(controllerUser.deleteUser)
 );
 
