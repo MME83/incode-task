@@ -115,7 +115,6 @@ const updateUser = async (id, req) => {
     if (req.userLogged.roles === BOSS && (boss || roles)) {
         const { _id } = req.userLogged;
         let loggedUser = await getUserById(_id);
-        //loggedUser = JSON.parse(JSON.stringify(loggedUser));
 
         subIds = helper.getPropValues(loggedUser, '_id');
 
