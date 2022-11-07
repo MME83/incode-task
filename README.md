@@ -38,9 +38,9 @@ Each user except the Administrator has a boss (strictly one)
 2. Run command (from repo path): `docker-compose up` in your terminal/bash/shell for deploying and running MongoDB as a docker container
 3. Run command (from repo path): `npm start`
 
-### Testing api server
+### Testing api server 
 - Use POSTMAN: https://www.postman.com/
-- Use swagger api: http://localhost:8080/docs
-- Open or Cope api docs in JSON: http://localhost:8080/docs.json
+- Use swagger api (on runnin server): http://localhost:8080/docs
+- Open or Cope api docs in JSON (on running server): http://localhost:8080/docs.json
 
 
