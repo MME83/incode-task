@@ -43,6 +43,12 @@ module.exports = {
                 return res.status(403).send({ error: 'Forbidden prop: \"subordinates\"'});
             }
 
+            if (req.method === 'POST' && roles === BOSS && req.body.roles) {
+                if (req.body.roles === ADMIN) {
+                    return res.status(403).send({ error: 'Forbidden prop: \"roles\" with admin role'});
+                }
+            }
+
             if (req.method === 'PATCH') {
                 const { user_id } = req.params
 

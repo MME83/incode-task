@@ -57,6 +57,60 @@ router.get(
     wrapAsync(controllerUser.getAllUsers)
 );
 
+/**
+ * @openapi
+ * '/users':
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *    - User
+ *    summary: Create new user. Allow with administrator or manager role.
+ *    description: Administrator can create any user with any data exclude 'subordinates' prop. Manager can create user with manager or user role.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/CreateUserSchemaByAdmin'
+ *              - $ref: '#/components/schemas/CreateUserSchemaByBoss'
+ *          examples:
+ *            adminExample:
+ *              summary: An example of create user by Administrator
+ *              description: Can create any user and data
+ *              value:
+ *                email: jondou@admin.com
+ *                name: John Dou
+ *                password: JohnDou1$
+ *                roles: manager | user | administrator
+ *                boss: 6365912baf5e364ad8080b3c
+ *            managerExample:
+ *              summary: An example of create user by Boss
+ *              description: Can create with manager or user role
+ *              value:
+ *                email: jondou@admin.com
+ *                name: John Dou
+ *                password: JohnDou1$
+ *                roles: manager | user
+ *                boss: 6365912baf5e364ad8080b3c
+ *    responses:
+ *      201:
+ *        description: Successfully created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserUpdatedResponseSchema'
+ *      500:
+ *        description: Error server
+ *      409:
+ *        description: Conflict
+ *      403:
+ *        description: Forbidden
+ *      401:
+ *        description: Unauthorised
+ *      400:
+ *        description: Bad request
+ */
 router.post(
     '/',
     middlewareAuth.checkAccessToken,

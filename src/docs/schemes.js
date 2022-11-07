@@ -262,5 +262,68 @@
  *      type: array
  *      items:
  *        type: object
- *        $ref: '#/components/schemas/UserResponseSchema' 
+ *        $ref: '#/components/schemas/UserResponseSchema'
+ *    CreateUserSchemaByAdmin:
+ *      description: Admin can create any user
+ *      type: object
+ *      required:
+ *        - email
+ *        - name
+ *        - password
+ *        - roles
+ *      properties:
+ *        email:
+ *          type: string
+ *          default: jane.doe@example.com
+ *        name:
+ *          type: string
+ *          default: Jane Doe
+ *        password:
+ *          type: string
+ *          default: adminAdmin1%
+ *        roles:
+ *          type: string
+ *          description: Allow only manager or user
+ *          default: user
+ *          enum:
+ *          - manager
+ *          - user
+ *          - administrator
+ *        boss:
+ *          type: string
+ *          description: Manager id in prop boss
+ *          minLength: 24
+ *          maxLength: 24
+ *          default: 6365937daf5e364ad8080b53
+ *    CreateUserSchemaByBoss:
+ *      description: Manager can create user with manager or user role
+ *      type: object
+ *      required:
+ *        - email
+ *        - name
+ *        - password
+ *        - roles
+ *      properties:
+ *        email:
+ *          type: string
+ *          default: jane.doe@example.com
+ *        name:
+ *          type: string
+ *          default: Jane Doe
+ *        password:
+ *          type: string
+ *          default: adminAdmin1%
+ *        roles:
+ *          type: string
+ *          description: Allow only manager or user
+ *          default: user
+ *          enum:
+ *          - manager
+ *          - user
+ *        boss:
+ *          type: string
+ *          description: Manager id in prop boss
+ *          minLength: 24
+ *          maxLength: 24
+ *          default: 6365937daf5e364ad8080b53
  */
