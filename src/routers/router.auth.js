@@ -26,6 +26,8 @@ const wrapAsync = fn => (req, res, next) => {
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/UserCreatedResponse'
+ *      500:
+ *        description: Error server
  *      409:
  *        description: Conflict
  *      400:
@@ -44,6 +46,7 @@ router.post(
  *    tags:
  *    - Auth
  *    summary: Login
+ *    description: this operation generate Bearer tokens - access and refresh pair
  *    requestBody:
  *      required: true
  *      content:
@@ -57,6 +60,8 @@ router.post(
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/UserLoginResponse'
+ *      500:
+ *        description: Error server
  *      409:
  *        description: Conflict
  *      400:
@@ -80,6 +85,8 @@ router.post(
  *    responses:
  *      204:
  *        description: Ok
+ *      500:
+ *        description: Error server
  *      409:
  *        description: Conflict
  *      401:
@@ -110,12 +117,12 @@ router.post(
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/UserLoginResponse'
+ *      500:
+ *        description: Error server
  *      409:
  *        description: Conflict
  *      401:
  *        description: Unauthorised
- *      400:
- *        description: Bad request
  */
 router.post(
     '/refresh',

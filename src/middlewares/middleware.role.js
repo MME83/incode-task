@@ -60,6 +60,11 @@ module.exports = {
                     if (String(_id) === user_id && (boss || req.body.roles)) {
                         return res.status(403).send({ error: 'Forbidden props: \"roles\", \"boss\"'});
                     }
+/*
+                    if (String(_id) !== user_id && (req.body.roles)) {
+                        return res.status(403).send({ error: 'Forbidden props: \"roles\"'});
+                    }
+                    */
                 } 
             }
 

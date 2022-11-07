@@ -106,11 +106,16 @@ const updateUser = async (id, req) => {
         }
     }
 
-    const subIds = [];
+    if (updateUserData.password) {
+        updateUserData.password = await passwordUtil.hashPass(password);
+    }
 
-    if (req.userLogged.roles === BOSS && boss) {
+    let subIds = [];
+
+    if (req.userLogged.roles === BOSS && (boss || roles)) {
         const { _id } = req.userLogged;
-        const loggedUser = await getUserById(_id);
+        let loggedUser = await getUserById(_id);
+        //loggedUser = JSON.parse(JSON.stringify(loggedUser));
 
         subIds = helper.getPropValues(loggedUser, '_id');
 
@@ -118,7 +123,7 @@ const updateUser = async (id, req) => {
             throw new Error(`Forbidden, user with id:${id} isn't your subordinate`);
         }
 
-        if (!subIds.includes(updateUserData.boss)) {
+        if (updateUserData.boss && !subIds.includes(updateUserData.boss)) {
             throw new Error(`Forbidden, manager with id:${updateUserData.boss} isn't your subordinate`);
         }
     }
