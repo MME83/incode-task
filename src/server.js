@@ -12,6 +12,7 @@ const {
     FADMIN_PASS
 } = require('./common/config');
 const cronJobs = require('./cron-jobs');
+const swaggerDocs = require('./util/swagger');
 
 const start = async () => {
     try {
@@ -28,7 +29,10 @@ const start = async () => {
 
         app.listen(NODE_PORT, () => {
             process.stdout.write(`App is running on http://localhost:${NODE_PORT}\n\n`);
+
             cronJobs();
+
+            swaggerDocs(app, NODE_PORT);
         });
     } catch (err) {
         console.error(`Failed to Establish Connection with MongoDB with Error: ${err}`)

@@ -6,6 +6,31 @@ const wrapAsync = fn => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 
+/**
+ * @openapi
+ * '/auth/signup':
+ *  post:
+ *    tags:
+ *    - Auth
+ *    summary: New user registration
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/AuthSignUpInput'     
+ *    responses:
+ *      201:
+ *        description: Success created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserCreatedResponse'
+ *      409:
+ *        description: Conflict
+ *      400:
+ *        description: Bad request
+ */
 router.post(
     '/signup',
     middlewareUser.validateSignUp,
