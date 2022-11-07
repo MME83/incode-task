@@ -33,7 +33,8 @@ module.exports = {
     },
 
     logout: async (req, res) => {
-        const token = req.get('Authorization');
+        let token = req.get('Authorization');
+        token = token.replace('Bearer ', '');
 
         await serviceAuth.deleteToken(token);
 
@@ -41,12 +42,19 @@ module.exports = {
     },
 
     refreshToken: async (req, res) => {
-        const refresh_token = req.get('Authorization');
+        let refresh_token = req.get('Authorization');
+        const bearer = 'Bearer ';
+        refresh_token = refresh_token.replace(bearer, '');
+
         const { userLogged } = req;
 
         const tokenPair = await serviceAuth.generateTokenPair();
         await serviceAuth.refreshToken(refresh_token, tokenPair);
-
-        return res.status(200).json({ user: userLogged, ...tokenPair });
+        
+        return res.status(200).json({ 
+            user: userLogged, 
+            access_token: bearer + tokenPair.access_token,
+            refresh_token: bearer + tokenPair.refresh_token
+        });
     }
 };

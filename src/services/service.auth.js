@@ -13,7 +13,8 @@ module.exports = {
     generateSaveTokenPair: async (user_id) => {
         const access_token = jwt.sign({}, SECRET_ACCESS, { expiresIn: '300m' });
         const refresh_token = jwt.sign({}, SECRET_REFRESH, { expiresIn: '30d' });
-        const tokenPair = { access_token, refresh_token };
+        const bearer = 'Bearer '
+        let tokenPair = { access_token, refresh_token };
 
         const savedTokens = await Tokens.create({ ...tokenPair, users: user_id });
 
@@ -23,10 +24,17 @@ module.exports = {
 
         process.stdout.write('\n ...new tokens pair created in BD \n\n');
 
+        tokenPair = { 
+            access_token: bearer + access_token, 
+            refresh_token: bearer + refresh_token 
+        };
+
         return tokenPair;
     },
 
     verifyToken: async (token, tokenType = 'access') => {
+        token = token.replace('Bearer_', '');
+
         try {
             const secret = tokenType === 'access' ? SECRET_ACCESS : SECRET_REFRESH;
             jwt.verify(token, secret);

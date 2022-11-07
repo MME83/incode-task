@@ -3,11 +3,13 @@ const { serviceAuth } = require('../services');
 module.exports = {
     checkAccessToken: async (req, res, next) => {
         try {
-            const accessToken = req.get('Authorization');
+            let accessToken = req.get('Authorization');
 
             if (!accessToken) {
                 return res.status(401).send({ error: 'No token' });
             }
+
+            accessToken = accessToken.replace('Bearer ', '');
 
             const tokenFromBd = await serviceAuth.verifyToken(accessToken);
 
@@ -15,17 +17,19 @@ module.exports = {
 
             next();
         } catch (err) {
-            next(err);
+            return res.status(401).send({ error: err.message });
         }
     },
 
     checkRefreshToken: async (req, res, next) => {
         try {
-            const refreshToken = req.get('Authorization');
+            let refreshToken = req.get('Authorization');
 
             if (!refreshToken) {
                 return res.status(401).send({ error: 'No token' });
             }
+
+            refreshToken = refreshToken.replace('Bearer ', '');
 
             const tokenFromBd = await serviceAuth.verifyToken(refreshToken, 'refresh_token');
 
@@ -33,7 +37,7 @@ module.exports = {
             
             next();
         } catch (err) {
-            next(err);
+            return res.status(401).send({ error: err.message });
         }
     }
 };

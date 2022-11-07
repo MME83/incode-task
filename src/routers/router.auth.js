@@ -37,18 +37,86 @@ router.post(
     wrapAsync(controllerAuth.signUpUser)
 );
 
+/**
+ * @openapi
+ * '/auth/login':
+ *  post:
+ *    tags:
+ *    - Auth
+ *    summary: Login
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/AuthLoginInput'     
+ *    responses:
+ *      200:
+ *        description: Success created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserLoginResponse'
+ *      409:
+ *        description: Conflict
+ *      400:
+ *        description: Bad request
+ */
 router.post(
     '/login',
     middlewareUser.validateLogin,
     wrapAsync(controllerAuth.loginUser)
 );
 
+/**
+ * @openapi
+ * '/auth/logout':
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *    - Auth
+ *    summary: Logout     
+ *    responses:
+ *      204:
+ *        description: Ok
+ *      409:
+ *        description: Conflict
+ *      401:
+ *        description: Unauthorised
+ *      400:
+ *        description: Bad request
+ */
 router.post(
     '/logout',
     middlewareAuth.checkAccessToken,
     wrapAsync(controllerAuth.logout)
 );
 
+/**
+ * @openapi
+ * '/auth/refresh':
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    tags:
+ *    - Auth
+ *    summary: Refresh token - create new token pair
+ *    description: put refresh_token to header - Authorize
+ *    responses:
+ *      200:
+ *        description: Success created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserLoginResponse'
+ *      409:
+ *        description: Conflict
+ *      401:
+ *        description: Unauthorised
+ *      400:
+ *        description: Bad request
+ */
 router.post(
     '/refresh',
     middlewareAuth.checkRefreshToken,
