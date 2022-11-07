@@ -23,3 +23,18 @@ Each user except the Administrator has a boss (strictly one)
 - administrator can see everyone
 - boss can see himself and all subordinates (recursively)
 - regular user can see only himself
+
+-----------------------------------------------------------
+
+### What you will need
+1. Clone this repository: https://github.com/MME83/incode-task
+2. An IDE (VS Code or WebStorm)
+3. A package manager such as NPM or Yarn
+4. Node.js installed (min v.16.17.x)
+5. Docker & docker-compose, download from: https://www.docker.com/
+
+### Install and run app
+1. Install all packages/modules using comand promt/terminal/git bash/ etc (for example: npm install)
+2. Run command: 'docker-compose up' in your terminal for deploying and running MongoDB as a docker container 
+
+
